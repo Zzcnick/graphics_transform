@@ -71,7 +71,7 @@ public class Matrix {
     }
 
     // Matrix Functions
-    public boolean copy(Matrix m) {
+    protected boolean copy(Matrix m) {
 	rows = m.getRows();
 	columns = m.getColumns();
 	matrix.clear();
@@ -79,7 +79,7 @@ public class Matrix {
 	    matrix.add(m.getColumn(i));
 	return true;
     }
-    public boolean scale(double d) {
+    protected boolean scale(double d) {
 	for (double[] a : matrix) {
 	    int l = a.length;
 	    for (int i = 0; i < l; i++) 
@@ -87,7 +87,7 @@ public class Matrix {
 	}
 	return true;
     }
-    public boolean add(Matrix m) {
+    protected boolean add(Matrix m) {
 	if (this.check_dimensions(m)) {
 	    for (int i = 0; i < rows; i++)
 		for (int j = 0; j < columns; j++)
@@ -96,7 +96,7 @@ public class Matrix {
 	}
 	return false;
     }
-    public boolean multiply(Matrix m) {
+    protected Matrix multiply(Matrix m) {
 	if (this.check_multiply(m)) {
 	    int r = rows;
 	    int c = m.getColumns();
@@ -126,18 +126,16 @@ public class Matrix {
 	    for (int row = 0; row < r; row++)
 		for (int column = 0; column < c; column++) 
 		    matrix.get(column)[row] = tmp[column][row];
-
-	    return true;
 	}
-	return false;
+	return this;
     }
 
     // Helper Functions
-    public boolean check_dimensions(Matrix m) {
+    protected boolean check_dimensions(Matrix m) {
 	return (columns == m.getColumns() &&
 		rows == m.getRows());
     }
-    public boolean check_multiply(Matrix m) {
+    protected boolean check_multiply(Matrix m) {
 	return (this.columns == m.getRows());
     }
     public double dot(double[] u, double[] v) {

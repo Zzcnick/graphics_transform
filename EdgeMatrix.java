@@ -9,14 +9,26 @@ import java.util.Iterator;
 public class EdgeMatrix extends Matrix {
     private int size;
     private ArrayList<Pixel> colors;
+    private Matrix transform;
 
     // Constructors
     public EdgeMatrix() {
 	matrix = new ArrayList<double[]>();
 	colors = new ArrayList<Pixel>();
+	transform = Matrix.identity(4); // 4x4
 	rows = 4;
 	columns = 0;
 	size = 0;
+    }
+
+    // Transformations
+    public Matrix scale(double sx, double sy, double sz) {
+	Matrix left = Matrix.identity(4);
+	left.set(0,0,sx);
+	left.set(1,1,sy);
+	left.set(2,2,sz);
+	transform = left.multiply(transform);
+	return transform;
     }
 
     // Methods
@@ -55,12 +67,20 @@ public class EdgeMatrix extends Matrix {
 	return true;
     }
 
-    // Iterator
+    // Iterators
     public Iterator<double[]> iterator() {
 	return matrix.iterator();
     }
     public Iterator<Pixel> colorIterator() {
 	return colors.iterator();
+    }
+
+    // toString Utilities
+    public String displayPoints() {
+	return toString();
+    }
+    public String displayTransform() {
+	return transform.toString();
     }
 }
 

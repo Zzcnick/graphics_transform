@@ -43,6 +43,9 @@ public class Canvas {
     public int getY() {
 	return y;
     }
+    public EdgeMatrix getEdges() {
+	return edges;
+    }
 
     // Canvas Methods
     public boolean draw_pixel(int x, int y, Pixel p) {

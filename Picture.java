@@ -5,7 +5,17 @@ public class Picture {
 
     public static void main(String[] args) throws FileNotFoundException {
 
-	// EdgeMatrix =========================
+	// Transform ==========================
+	Canvas c = new Canvas(500, 500, 255, 255, 255);
+	c.edge(50, 50, 50, 150);
+	c.edge(50, 50, 150, 50);
+	EdgeMatrix edges = c.getEdges();
+	System.out.println(edges.displayPoints());
+	System.out.println(edges.displayTransform());
+
+	// ==================================== */
+
+	/* // EdgeMatrix =========================
 	Canvas c = new Canvas(500, 500, 0, 0, 0);
 	double x, y, X, Y;
 	Pixel p = new Pixel();
