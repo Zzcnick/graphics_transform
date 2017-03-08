@@ -79,7 +79,7 @@ public class Matrix {
 	    matrix.add(m.getColumn(i));
 	return true;
     }
-    protected boolean scale(double d) {
+    protected boolean scalar(double d) {
 	for (double[] a : matrix) {
 	    int l = a.length;
 	    for (int i = 0; i < l; i++) 
@@ -199,7 +199,7 @@ public class Matrix {
 	pm.multiply(pm3);
 	System.out.println("Multipling Matrix 1 by Matrix 3...\n" + pm + "\n");
 
-	pm.scale(2.5);
+	pm.scalar(2.5);
 	System.out.println("Scaling contents of Matrix 1 by 2.5...\n" + pm + "\n");
 
 	System.out.println("Ensuring Matrix 2 is preserved...\n" + pm2 + "\n");

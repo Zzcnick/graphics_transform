@@ -30,6 +30,33 @@ public class EdgeMatrix extends Matrix {
 	transform = left.multiply(transform);
 	return transform;
     }
+    public Matrix scale(double s) {
+	return scale(s, s, s);
+    }
+    public Matrix translate(double dx, double dy, double dz) {
+	Matrix left = Matrix.identity(4);
+	left.set(0,3,dx);
+	left.set(1,3,dy);
+	left.set(2,3,dz);
+	transform = left.multiply(transform);
+	return transform;
+    }
+    public Matrix rotate(char axis, double theta) {
+	Matrix left = Matrix.identity(4);
+	double rad = Math.toRadians(theta);
+	left.set(0,0,Math.cos(rad));
+	left.set(1,1,Math.cos(rad));
+	left.set(0,1,-1 * Math.sin(rad));
+	left.set(1,0, Math.sin(rad));
+	transform = left.multiply(transform);
+	return transform;
+    }
+
+    public Matrix apply() {
+	matrix = transform.multiply(matrix);
+	transform = Matrix.identity(4);
+	return this;
+    }
 
     // Methods
     public boolean add_point(double[] p) {

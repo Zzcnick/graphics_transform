@@ -13,6 +13,14 @@ public class Picture {
 	System.out.println(edges.displayPoints());
 	System.out.println(edges.displayTransform());
 
+	edges.scale(2);
+	System.out.println("\n" + edges.displayPoints());
+	System.out.println(edges.displayTransform());
+
+	edges.apply();
+	System.out.println("\n" + edges.displayPoints());
+	System.out.println(edges.displayTransform());
+
 	// ==================================== */
 
 	/* // EdgeMatrix =========================
