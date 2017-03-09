@@ -76,15 +76,29 @@ public class Canvas {
     public Matrix rotate(char axis, double theta) {
 	Matrix left = Matrix.identity(4);
 	double rad = Math.toRadians(theta);
-	left.set(0,0,Math.cos(rad));
-	left.set(1,1,Math.cos(rad));
-	left.set(0,1,-1 * Math.sin(rad));
-	left.set(1,0, Math.sin(rad));
+	if (axis == 'z') {
+	    left.set(0,0,Math.cos(rad));
+	    left.set(1,1,Math.cos(rad));
+	    left.set(0,1,-1 * Math.sin(rad));
+	    left.set(1,0, Math.sin(rad));
+	} 
+	else if (axis == 'y') {
+	    left.set(0,0,Math.cos(rad));
+	    left.set(2,2,Math.cos(rad));
+	    left.set(0,2,-1 * Math.sin(rad));
+	    left.set(2,0,Math.sin(rad));
+	}
+	else if (axis == 'x') {
+	    left.set(1,1,Math.cos(rad));
+	    left.set(2,2,Math.cos(rad));
+	    left.set(1,2,-1 * Math.sin(rad));
+	    left.set(2,1,Math.sin(rad));
+	}
 	transform = left.multiply(transform);
 	return transform;
     }
     public Matrix apply() {
-	edges = transform.multiply(edges);
+	edges.copy(transform.multiply(edges));
 	transform = Matrix.identity(4);
 	return edges;
     }
@@ -221,6 +235,14 @@ public class Canvas {
     public boolean edge(double x1, double y1, double x2, double y2, Pixel p) {
 	return edges.add_edge(x1, y1, x2, y2, p);
     }
+    public boolean edge(double x1, double y1, double z1,
+			double x2, double y2, double z2) {
+	return edges.add_edge(x1, y1, z1, x2, y2, z2, new Pixel(0,0,0));
+    }
+    public boolean edge(double x1, double y1, double z1,
+			double x2, double y2, double z2, Pixel p) {
+	return edges.add_edge(x1, y1, z1, x2, y2, z2, p);
+    }
 
     public boolean draw() {
 	Iterator<double[]> edgelist = edges.iterator();
@@ -234,6 +256,15 @@ public class Canvas {
 	    int y2 = (int)(p2[1]);
 	    line(x1, y1, x2, y2, colors.next());
 	}
+	return true;
+    }
+    
+    public boolean clearEdges() {
+	edges = new Matrix();
+	return true;
+    }
+    public boolean clearTransform() {
+	transform = Matrix.identity(4);
 	return true;
     }
 

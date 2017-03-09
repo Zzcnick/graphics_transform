@@ -30,6 +30,7 @@ public class Matrix {
     }
     public Matrix(int n, int m) {
 	matrix = new ArrayList<double[]>();
+	colors = new ArrayList<Pixel>();
 	for (int i = 0; i < m; i++) {
 	    matrix.add(new double[n]);
 	}
@@ -38,6 +39,7 @@ public class Matrix {
     }
     public Matrix(double[][] darr) {
 	matrix = new ArrayList<double[]>();
+	colors = new ArrayList<Pixel>();
 	for (double[] d : darr)
 	    matrix.add(Arrays.copyOf(d, d.length));
 	rows = darr[0].length;
@@ -73,12 +75,17 @@ public class Matrix {
 	return add_edge(x1, y1, x2, y2, new Pixel(0,0,0));
     }
     public boolean add_edge(double x1, double y1, double x2, double y2, Pixel p) {
-	add_point(x1, y1);
-	add_point(x2, y2);
+	return add_edge(x1, y1, 0, x2, y2, 0, p);
+    }
+    public boolean add_edge(double x1, double y1, double z1, 
+			    double x2, double y2, double z2, Pixel p) {
+	add_point(x1, y1, z1);
+	add_point(x2, y2, z2);
 	size++;
 	colors.add(p);
 	return true;
     }
+
 
     // Accessors + Mutators
     public double get(int r, int c) {

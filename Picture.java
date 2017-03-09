@@ -4,25 +4,150 @@ import java.util.*;
 public class Picture {
 
     public static void main(String[] args) throws FileNotFoundException {
+	System.out.println(Arrays.toString(args));
+	if (args.length > 0) { // Parser
+	    Canvas c = new Canvas(500, 500, 255, 255, 255);
+	    String script = args[0];
+	    File file = new File(script);	    
+	    Scanner sc = new Scanner(file);
 
-	/* // Transform ==========================
-	Canvas c = new Canvas(500, 500, 255, 255, 255);
-	EdgeMatrix e = c.getEdges();
-	Matrix t = c.getTransform();
-	c.edge(50, 50, 50, 150);
-	c.edge(50, 50, 150, 50);
+	    String cmd = "";
+	    while (sc.hasNext()) {
+		cmd = sc.next(); // Command
+		
+		// Processing
+		if (cmd.equals("line")) {
+		    c.edge(sc.nextDouble(), sc.nextDouble(), sc.nextDouble(),
+			   sc.nextDouble(), sc.nextDouble(), sc.nextDouble());
+		} else if (cmd.equals("ident")) {
+		    c.clearTransform();
+		} else if (cmd.equals("scale")) {
+		    c.scale(sc.nextDouble(), sc.nextDouble(), sc.nextDouble());
+		} else if (cmd.equals("move")) {
+		    c.translate(sc.nextDouble(), sc.nextDouble(), sc.nextDouble());
+		} else if (cmd.equals("rotate")) {
+		    c.rotate(sc.next().charAt(0), sc.nextDouble());
+		} else if (cmd.equals("apply")) {
+		    c.apply();
+		} else if (cmd.equals("draw")) {
+		    c.draw();
+		} else if (cmd.equals("save")) {
+		    c.save(sc.next());
+		}
+	    }
+	    return;
+	} 
+	System.out.println(Arrays.toString(args));
+	// Transform ==========================
+	Canvas c = new Canvas(500, 500, 20, 0, 20);
+	double x = 0; double y = 0;
+	double r = 0; double a = 0;
+	int R, G, B; R = 0; G = 0; B = 0;
+	double tmp = 25 * Math.random();
 
-	c.scale(2);
-	System.out.println(e);
-	System.out.println(t);
+	for (int i = 0; i < 150; i++) {
+	    R = 155 + (int)(100 * Math.random());
+	    G = 155 + (int)(100 * Math.random());
+	    B = 155 + (int)(100 * Math.random());
+	    Pixel p = new Pixel(R, G, B);
+	    r = 2 + 3 * Math.random();
+	    x = 20 + (int)(460 * Math.random());
+	    y = 20 + (int)(460 * Math.random());
+	    c.edge(x - r, y, x + r, y, p);
+	    c.edge(x, y - r, x, y + r, p);
+	}
+	c.draw();
+	c.clearEdges();
 
+	// Inner Ring - Back
+	for (int i = 0; i < 250; i++) {
+	    R = 180 + (int)(50 * Math.random());
+	    G = R;
+	    B = 20;
+	    Pixel p = new Pixel(R, G, B);
+	    r = 50 + 50 * Math.random();
+	    a = Math.random() * Math.PI - Math.PI / 2;
+	    x = r * Math.cos(a);
+	    y = r * Math.sin(a);
+	    double extension = 5 + 10 * Math.random();
+	    double dx, dy;
+	    dx = extension * Math.sin(a);
+	    dy = extension * Math.cos(a);
+	    c.edge(x + dx,
+		   y - dy,
+		   x - dx,
+		   y + dy,
+		   p);
+	}
+
+	// Nucleus
+	for (int fold = 0; fold < 360; fold += 10) {
+	    for (int i = 0; i < 360; i += (int)(25 * Math.random())) {
+		R = 150 + (int)(106 * Math.random());
+		G = 100;
+		B = 20;
+		Pixel p = new Pixel(R, G, B);
+		x = 40 * Math.cos(2 * Math.PI * i / 360);
+		y = 40 * Math.sin(2 * Math.PI * i / 360);
+		c.edge(0,0,x,y,p);
+	    }
+	    c.rotate('x', 10);
+	    c.apply();
+	}
+
+	// Inner Ring - Front
+	for (int i = 0; i < 250; i++) {
+	    R = 180 + (int)(50 * Math.random());
+	    G = R;
+	    B = 30;
+	    Pixel p = new Pixel(R, G, B);
+	    r = 50 + 50 * Math.random();
+	    a = Math.random() * Math.PI + Math.PI / 2;
+	    x = r * Math.cos(a);
+	    y = r * Math.sin(a);
+	    double extension = 5 + 10 * Math.random();
+	    double dx, dy;
+	    dx = extension * Math.sin(a);
+	    dy = extension * Math.cos(a);
+	    c.edge(x + dx,
+		   y - dy,
+		   x - dx,
+		   y + dy,
+		   p);
+	}
+
+	// Outer Ring
+	for (int i = 0; i < 250; i++) {
+	    R = 130 + (int)(50 * Math.random());
+	    G = R - 10;
+	    B = 10;
+	    Pixel p = new Pixel(R, G, B);
+	    r = 100 + 100 * Math.random();
+	    a = Math.random() * 2 * Math.PI;
+	    x = r * Math.cos(a);
+	    y = r * Math.sin(a);
+	    double extension = 15 + 10 * Math.random();
+	    double dx, dy;
+	    dx = extension * Math.sin(a);
+	    dy = extension * Math.cos(a);
+	    c.edge(x + dx,
+		   y - dy,
+		   x - dx,
+		   y + dy,
+		   p);
+	}
+
+	c.rotate('x', 60);
+	c.rotate('y', 30);
+	c.translate(250, 250, 250);
 	c.apply();
-	System.out.println(e);
-	System.out.println(t);
+
+	c.draw();
+	c.save("out.ppm");
 
 	// ==================================== */
 
-	// EdgeMatrix =========================
+	/* // EdgeMatrix =========================
 	Canvas c = new Canvas(500, 500, 0, 0, 0);
 	double x, y, X, Y;
 	Pixel p = new Pixel();
