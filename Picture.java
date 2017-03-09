@@ -4,7 +4,6 @@ import java.util.*;
 public class Picture {
 
     public static void main(String[] args) throws FileNotFoundException {
-	System.out.println(Arrays.toString(args));
 	if (args.length > 0) { // Parser
 	    Canvas c = new Canvas(500, 500, 255, 255, 255);
 	    String script = args[0];
@@ -37,7 +36,7 @@ public class Picture {
 	    }
 	    return;
 	} 
-	System.out.println(Arrays.toString(args));
+
 	// Transform ==========================
 	Canvas c = new Canvas(500, 500, 20, 0, 20);
 	double x = 0; double y = 0;
