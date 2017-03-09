@@ -5,25 +5,24 @@ public class Picture {
 
     public static void main(String[] args) throws FileNotFoundException {
 
-	// Transform ==========================
+	/* // Transform ==========================
 	Canvas c = new Canvas(500, 500, 255, 255, 255);
+	EdgeMatrix e = c.getEdges();
+	Matrix t = c.getTransform();
 	c.edge(50, 50, 50, 150);
 	c.edge(50, 50, 150, 50);
-	EdgeMatrix edges = c.getEdges();
-	System.out.println(edges.displayPoints());
-	System.out.println(edges.displayTransform());
 
-	edges.scale(2);
-	System.out.println("\n" + edges.displayPoints());
-	System.out.println(edges.displayTransform());
+	c.scale(2);
+	System.out.println(e);
+	System.out.println(t);
 
-	edges.apply();
-	System.out.println("\n" + edges.displayPoints());
-	System.out.println(edges.displayTransform());
+	c.apply();
+	System.out.println(e);
+	System.out.println(t);
 
 	// ==================================== */
 
-	/* // EdgeMatrix =========================
+	// EdgeMatrix =========================
 	Canvas c = new Canvas(500, 500, 0, 0, 0);
 	double x, y, X, Y;
 	Pixel p = new Pixel();

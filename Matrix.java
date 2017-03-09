@@ -1,8 +1,9 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 
 // ===================================================
-// Matrix Class - Matrix Functions
+// Matrix Class - Matrix Functions, EdgeMatrix
 // ===================================================
 
 /* Structure:
@@ -14,17 +15,18 @@ import java.util.Arrays;
 
 public class Matrix {
     protected ArrayList<double[]> matrix;
+    protected ArrayList<Pixel> colors;
     protected int rows;
     protected int columns;
+    protected int size;
     
     // Constructors
-    public Matrix() { // 4x4 Matrix
+    public Matrix() { // EdgeMatrix
 	matrix = new ArrayList<double[]>();
-	for (int i = 0; i < 4; i++) {
-	    matrix.add(new double[4]);
-	}
+	colors = new ArrayList<Pixel>();
 	rows = 4;
-	columns = 4;
+	columns = 0;
+	size = 0;
     }
     public Matrix(int n, int m) {
 	matrix = new ArrayList<double[]>();
@@ -42,6 +44,42 @@ public class Matrix {
 	columns = darr.length;
     }
     
+    // EdgeMatrix Methods
+    public boolean add_point(double[] p) {
+	columns++;
+	return matrix.add(p);
+    }
+    public boolean add_point(double x, double y, double z, double a) {
+	return add_point(new double[]{x, y, z, a});
+    }
+    public boolean add_point(double x, double y, double z) {
+	return add_point(new double[]{x, y, z, 1.0});
+    }
+    public boolean add_point(double x, double y) {
+	return add_point(new double[]{x, y, 0, 1.0});
+    }
+
+    public boolean add_edge(double[] p1, double[] p2) {
+	return add_edge(p1, p2, new Pixel(0,0,0));
+    }
+    public boolean add_edge(double[] p1, double[] p2, Pixel p) {
+	add_point(p1);
+	add_point(p2);
+	size++;
+	colors.add(p);
+	return true;
+    }
+    public boolean add_edge(double x1, double y1, double x2, double y2) {
+	return add_edge(x1, y1, x2, y2, new Pixel(0,0,0));
+    }
+    public boolean add_edge(double x1, double y1, double x2, double y2, Pixel p) {
+	add_point(x1, y1);
+	add_point(x2, y2);
+	size++;
+	colors.add(p);
+	return true;
+    }
+
     // Accessors + Mutators
     public double get(int r, int c) {
 	return matrix.get(c)[r];
@@ -96,7 +134,8 @@ public class Matrix {
 	}
 	return false;
     }
-    protected Matrix multiply(Matrix m) {
+
+    protected Matrix multiply(Matrix m) { // Changes Matrix on Left
 	if (this.check_multiply(m)) {
 	    int r = rows;
 	    int c = m.getColumns();
@@ -107,25 +146,13 @@ public class Matrix {
 		for (int column = 0; column < c; column++) 
 		    tmp[column][row] = dot(this.getRow(row),
 					   m.getColumn(column));
-	    
-	    // Trimming Stored Matrix
-	    int dc = c - columns;
-	    while (dc != 0) {
-		if (dc < 0) {
-		    matrix.remove(columns - 1);
-		    dc++;
-		    columns--;
-		} else {
-		    matrix.add(new double[r]);
-		    dc--;
-		    columns++;
-		}
-	    }
 
-	    // Transferring Values
-	    for (int row = 0; row < r; row++)
-		for (int column = 0; column < c; column++) 
-		    matrix.get(column)[row] = tmp[column][row];
+	    // Repopulating Data
+	    matrix.clear();
+	    for (double[] darr : tmp) 
+		matrix.add(darr);
+	    
+	    columns = c;
 	}
 	return this;
     }
@@ -165,9 +192,17 @@ public class Matrix {
 	return retStr.substring(0, retStr.length() - 3) + "|";
     }
 
+    // Iterators
+    public Iterator<double[]> iterator() {
+	return matrix.iterator();
+    }
+    public Iterator<Pixel> colorIterator() {
+	return colors.iterator();
+    }
+
     // Testing
     public static void main(String[] args) {
-	Matrix pm = new Matrix();
+	Matrix pm = new Matrix(4,4);
 	System.out.println("Creating new Matrix...\n" + pm + "\n");
 	
 	Matrix pm2 = new Matrix(new double[][]
@@ -197,7 +232,7 @@ public class Matrix {
 	System.out.println("Copying contents of Matrix 2 to Matrix 1...\n" + pm + "\n");
 
 	pm.multiply(pm3);
-	System.out.println("Multipling Matrix 1 by Matrix 3...\n" + pm + "\n");
+	System.out.println("Multiplying Matrix 1 by Matrix 3...\n" + pm + "\n");
 
 	pm.scalar(2.5);
 	System.out.println("Scaling contents of Matrix 1 by 2.5...\n" + pm + "\n");
